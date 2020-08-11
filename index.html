@@ -26,24 +26,67 @@
         camera.aspect = width / height
         camera.updateProjectionMatrix()
       })
-
+      //create the orbital control
       controls = new THREE.OrbitControls( camera, renderer.domElement)
+
       //create the shape
-      var geometry = new THREE.BoxGeometry( 1, 1, 1)
+      const geometry = new THREE.BoxGeometry( 1, 1, 1)
+      const cubeMaterials = [
+        new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('img/wood.jpg'), side: THREE.DoubleSide}),
+        new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('img/wood.jpg'), side: THREE.DoubleSide}),
+        new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('img/wood.jpg'), side: THREE.DoubleSide}),
+        new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('img/wood.jpg'), side: THREE.DoubleSide}),
+        new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('img/wood.jpg'), side: THREE.DoubleSide}),
+        new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load('img/wood.jpg'), side: THREE.DoubleSide}),
+      ]
+
+
 
       //create a material, color, or image texture
-      var material = new THREE.MeshBasicMaterial( { color: 0xAFFFFF, wireframe: false})
+      const material = new THREE.MeshFaceMaterial( cubeMaterials )
 
-      var cube = new THREE.Mesh( geometry, material )
+      const cube = new THREE.Mesh( geometry, material )
       scene.add( cube )
 
       camera.position.z = 3;
+
+      //Adding the Floor
+      const floorGeometry = new THREE.CubeGeometry( 10, .5, 10 );
+      const floorMaterial = new THREE.MeshLambertMaterial({ map: new THREE.TextureLoader().load('img/wood.jpg'), side: THREE.DoubleSide})
+      const floorCube = new THREE.Mesh( floorGeometry, floorMaterial )
+      floorCube.position.y = -5
+      scene.add( floorCube )
+
+      const ceilingGeometry = new THREE.CubeGeometry( 10, .5, 10 );
+      const ceilingMaterial = new THREE.MeshLambertMaterial({ map: new THREE.TextureLoader().load('img/cement.jpg'), side: THREE.DoubleSide})
+      const ceilingCube = new THREE.Mesh( ceilingGeometry, ceilingMaterial )
+      ceilingCube.position.y = 5
+      scene.add( ceilingCube )
+
+      const leftWallGeometry = new THREE.CubeGeometry( .5, 10, 10 );
+      const leftWallMaterial = new THREE.MeshLambertMaterial({ map: new THREE.TextureLoader().load('img/cement.jpg'), side: THREE.DoubleSide})
+      const leftWallCube = new THREE.Mesh( leftWallGeometry, leftWallMaterial)
+      leftWallCube.position.x = -5
+      scene.add( leftWallCube )
+
+      const rightWallGeometry = new THREE.CubeGeometry( .5, 10, 10 );
+      const rightWallMaterial = new THREE.MeshLambertMaterial({ map: new THREE.TextureLoader().load('img/cement.jpg'), side: THREE.DoubleSide})
+      const rightWallCube = new THREE.Mesh( rightWallGeometry, rightWallMaterial)
+      rightWallCube.position.x = 5
+      scene.add( rightWallCube )
+
+      //clicking logic
+      
+
+      //adding light
+      const ambientLight = new THREE.AmbientLight( 0xFFFFFF, 1.0 )
+      scene.add( ambientLight )
 
       //if there are any changes aka game logic
       const update = function(){
         cube.rotation.x += 0.01
         cube.rotation.y += 0.01
-        cube.rotation.x += 0.01
+        cube.rotation.z += 0.01
       }
       const render = function(){
         renderer.render( scene, camera)
